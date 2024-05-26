@@ -94,7 +94,6 @@ def temperatures():
     # calculate date a year ago from most recent date in database
     most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     most_recent_date_str = most_recent_date[0]
-    print(most_recent_date_str)
     recent_date = dt.datetime.strptime(most_recent_date_str, '%Y-%m-%d')
     one_year_ago = recent_date - dt.timedelta(days=365)
     
