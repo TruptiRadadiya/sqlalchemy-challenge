@@ -94,7 +94,7 @@ def temperatures():
     # calculate date a year ago from most recent date in database
     most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     most_recent_date_str = most_recent_date[0]
-    recent_date = dt.datetime.strptime(most_recent_date_str, '%Y-%m-%d')
+    recent_date = dt.date(2017, 8, 23)
     one_year_ago = recent_date - dt.timedelta(days=365)
     
     # Determine the most active station
