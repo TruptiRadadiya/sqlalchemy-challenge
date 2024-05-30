@@ -40,6 +40,13 @@ app = Flask(__name__)
 #################################################
 # Flask Routes
 #################################################
+
+# calculate date a year ago from most recent date in database
+most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+most_recent_date_str = most_recent_date[0]
+recent_date = dt.date(2017, 8, 23)
+one_year_ago = recent_date - dt.timedelta(days=365)
+
 @app.route("/")
 def home():
     print("Server received request for 'Home' page...")
@@ -57,7 +64,7 @@ def home():
 def precipitation():
     
     # Query measurement to get date and prcp
-    results = session.query(Measurement.date, Measurement.prcp).all()
+    results = session.query(Measurement.date, Measurement.prcp).filter( Measurement.date >= one_year_ago).all()
 
     # Create a dictionary from the row data and append to a list of precipitaion dict
     precipitaion = []
@@ -90,13 +97,7 @@ def stations():
 
 @app.route("/api/v1.0/tobs")
 def temperatures():
-    
-    # calculate date a year ago from most recent date in database
-    most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
-    most_recent_date_str = most_recent_date[0]
-    recent_date = dt.date(2017, 8, 23)
-    one_year_ago = recent_date - dt.timedelta(days=365)
-    
+        
     # Determine the most active station
     most_active_station = most_active_station = session.query(Measurement.station, func.count(Measurement.station)).group_by(Measurement.station).order_by(func.count(Measurement.station).desc()).first()
     most_active_station_id = most_active_station[0]
